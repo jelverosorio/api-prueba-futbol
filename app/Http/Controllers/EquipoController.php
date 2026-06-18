@@ -12,7 +12,8 @@ class EquipoController extends Controller
      */
     public function index()
     {
-        return response()->json(Equipo::all());
+        $equipos = Equipo::all();
+        return view('equipos.index', compact('equipos'));
     }
 
     /**

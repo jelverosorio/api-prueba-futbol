@@ -16,6 +16,7 @@
     <ul id="lista"></ul>
     <script>
         const api = "http://127.0.0.1:8000/api/equipos";
+        const apiPartidos = "http://127.0.0.1:8000/api/partidos";
     //agregar equipos
         document.getElementById("formEquipo").addEventListener("submit", async function(e) {
             e.preventDefault();
@@ -59,10 +60,67 @@
 
                 li.appendChild(btn);
                 lista.appendChild(li);
+
+    //guardar partidos
+
+                document.getElementById("formPartido").addEventListener("submit", async function(e){
+                    e.preventDefault();
+
+                    await fetch(apiPartidos, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            equipo_local_id: document.getElementById("local").value,
+                            equipo_visitante_id: document.getElementById("visitante").value,
+                            goles_local: document.getElementById("goles_local").value,
+                            goles_visitante: document.getElementById("goles_visitante").value
+                        })
+
+                async function cargarSelects() {
+                let res = await fetch(api);
+                let data = await res.json();
+
+                let local = document.getElementById("local");
+                let visitante = document.getElementById("visitante");
+
+                local.innerHTML = "";
+                visitante.innerHTML = "";
+
+                data.forEach(e => {
+                    let opt1 = document.createElement("option");
+                    opt1.value = e.id;
+                    opt1.textContent = e.nombre;
+
+                    let opt2 = document.createElement("option");
+                    opt2.value = e.id;
+                    opt2.textContent = e.nombre;
+
+                    local.appendChild(opt1);
+                    visitante.appendChild(opt2);
             });
         }
 
-        cargarEquipos();
+        cargarSelects();
     </script>
+
+    <ul id="lista"></ul>
+
+    <hr>
+
+    <h3>Crear partidos</h3>
+
+    <form id="formPartido">
+        <select id="local"></select>
+        <select id="visitante"></select>
+
+        <input type="number" id="goles_local" placeholder="Goles Local">
+        <input type="number" id="goles_visitante" placeholder="Goles Visitante">
+
+        <button type="submit">Guardar</button>
+        
+    </form>
+
 </body>
 </html>
